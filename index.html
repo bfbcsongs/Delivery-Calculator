@@ -79,7 +79,6 @@ input:focus {
     font-weight: bold;
 }
 
-/* TOTAL ROW HAS EXACTLY THE SAME LOOK AS OTHER ROWS */
 .total-label {
     text-align: left;
     padding-left: 12px;
@@ -208,12 +207,54 @@ input:focus {
         <td class="amount" id="amountBo">0.00</td>
     </tr>
 
-    <!-- ROW 5 -->  
+    <!-- ROW 5: TOTAL -->  
     <tr>
         <td class="miki">TOTAL</td>
         <td></td>
         <td></td>
         <td class="amount" id="totalAmount">0.00</td>
+    </tr>
+
+    <!-- ROW 6: BAL (Added) -->
+    <tr>
+        <td class="miki">BAL</td>
+        <td>
+            <input type="number" id="qtyBal"
+                   min="0" step="any"
+                   oninput="calculate()">
+        </td>
+        <td>
+            <input type="number" id="priceBal"
+                   min="0" step="any"
+                   value="45"
+                   oninput="calculate()">
+        </td>
+        <td class="amount" id="amountBal">0.00</td>
+    </tr>
+
+    <!-- ROW 7: PAY (Deducted) -->
+    <tr>
+        <td class="miki">PAY</td>
+        <td>
+            <input type="number" id="qtyPay"
+                   min="0" step="any"
+                   oninput="calculate()">
+        </td>
+        <td>
+            <input type="number" id="pricePay"
+                   min="0" step="any"
+                   value="45"
+                   oninput="calculate()">
+        </td>
+        <td class="amount" id="amountPay">0.00</td>
+    </tr>
+
+    <!-- ROW 8: NET TOTAL -->  
+    <tr>
+        <td class="miki">NET TOTAL</td>
+        <td></td>
+        <td></td>
+        <td class="amount" id="netTotalAmount">0.00</td>
     </tr>
 
     </tbody>
@@ -254,9 +295,15 @@ function calculate() {
 
     const boQty = getNumber("qtyBo");
     const boPrice = getNumber("priceBo");
-
-    // BO = Qty / 2 × Unit Price
     const boAmount = (boQty / 2) * boPrice;
+
+    const balQty = getNumber("qtyBal");
+    const balPrice = getNumber("priceBal");
+    const balAmount = balQty * balPrice;
+
+    const payQty = getNumber("qtyPay");
+    const payPrice = getNumber("pricePay");
+    const payAmount = payQty * payPrice;
 
     // TOTAL = REG + FRESH + CAB - BO
     const total =
@@ -264,6 +311,12 @@ function calculate() {
         freshAmount +
         cabAmount -
         boAmount;
+
+    // NET TOTAL = TOTAL + BAL - PAY
+    const netTotal =
+        total +
+        balAmount -
+        payAmount;
 
     document.getElementById("amountReg").textContent =
         formatMoney(regAmount);
@@ -279,6 +332,15 @@ function calculate() {
 
     document.getElementById("totalAmount").textContent =
         formatMoney(total);
+
+    document.getElementById("amountBal").textContent =
+        formatMoney(balAmount);
+
+    document.getElementById("amountPay").textContent =
+        formatMoney(payAmount);
+
+    document.getElementById("netTotalAmount").textContent =
+        formatMoney(netTotal);
 
     saveData();
 }
@@ -296,7 +358,13 @@ function saveData() {
         priceCab: document.getElementById("priceCab").value,
 
         qtyBo: document.getElementById("qtyBo").value,
-        priceBo: document.getElementById("priceBo").value
+        priceBo: document.getElementById("priceBo").value,
+
+        qtyBal: document.getElementById("qtyBal").value,
+        priceBal: document.getElementById("priceBal").value,
+
+        qtyPay: document.getElementById("qtyPay").value,
+        pricePay: document.getElementById("pricePay").value
     };
 
     localStorage.setItem(
@@ -317,29 +385,23 @@ function loadData() {
 
     const data = JSON.parse(saved);
 
-    document.getElementById("qtyReg").value =
-        data.qtyReg || "";
+    document.getElementById("qtyReg").value = data.qtyReg || "";
+    document.getElementById("priceReg").value = data.priceReg || "45";
 
-    document.getElementById("priceReg").value =
-        data.priceReg || "45";
+    document.getElementById("qtyFresh").value = data.qtyFresh || "";
+    document.getElementById("priceFresh").value = data.priceFresh || "45";
 
-    document.getElementById("qtyFresh").value =
-        data.qtyFresh || "";
+    document.getElementById("qtyCab").value = data.qtyCab || "";
+    document.getElementById("priceCab").value = data.priceCab || "45";
 
-    document.getElementById("priceFresh").value =
-        data.priceFresh || "45";
+    document.getElementById("qtyBo").value = data.qtyBo || "";
+    document.getElementById("priceBo").value = data.priceBo || "45";
 
-    document.getElementById("qtyCab").value =
-        data.qtyCab || "";
+    document.getElementById("qtyBal").value = data.qtyBal || "";
+    document.getElementById("priceBal").value = data.priceBal || "45";
 
-    document.getElementById("priceCab").value =
-        data.priceCab || "45";
-
-    document.getElementById("qtyBo").value =
-        data.qtyBo || "";
-
-    document.getElementById("priceBo").value =
-        data.priceBo || "45";
+    document.getElementById("qtyPay").value = data.qtyPay || "";
+    document.getElementById("pricePay").value = data.pricePay || "45";
 
     calculate();
 }
