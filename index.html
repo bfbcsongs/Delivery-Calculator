@@ -26,6 +26,59 @@ body {
     border: 1px solid #d1d5db;
 }
 
+/* SYNC PANEL STYLES */
+.sync-panel {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    padding: 10px;
+    background: #111827;
+    border-bottom: 1px solid #d1d5db;
+}
+
+.sync-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.sync-cell label {
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.sync-cell input {
+    width: 100%;
+    height: 32px;
+    padding: 4px;
+    border: 1px solid #9ca3af;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    background: white;
+}
+
+.clear-btn {
+    width: 100%;
+    height: 32px;
+    margin-top: 19px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.clear-btn:hover {
+    background: #dc2626;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -79,19 +132,7 @@ input:focus {
     font-weight: bold;
 }
 
-.total-label {
-    text-align: left;
-    padding-left: 12px;
-    font-weight: bold;
-}
-
-.total-amount {
-    font-weight: bold;
-    font-size: 16px;
-}
-
 @media (max-width: 400px) {
-
     body {
         padding: 15px 5px;
     }
@@ -116,8 +157,15 @@ input:focus {
         font-size: 14px;
     }
 
-    .miki,
-    .total-label {
+    .sync-cell label {
+        font-size: 10px;
+    }
+
+    .clear-btn {
+        font-size: 11px;
+    }
+
+    .miki {
         padding-left: 8px;
     }
 }
@@ -127,6 +175,29 @@ input:focus {
 <body>
 
 <div class="table-box">
+
+    <!-- 5-COLUMN SYNC PANEL -->
+    <div class="sync-panel">
+        <div class="sync-cell">
+            <label>Dry</label>
+            <input type="number" id="syncDry" min="0" step="any" oninput="syncFromPanel('Dry')">
+        </div>
+        <div class="sync-cell">
+            <label>Fresh</label>
+            <input type="number" id="syncFresh" min="0" step="any" oninput="syncFromPanel('Fresh')">
+        </div>
+        <div class="sync-cell">
+            <label>Cab</label>
+            <input type="number" id="syncCab" min="0" step="any" oninput="syncFromPanel('Cab')">
+        </div>
+        <div class="sync-cell">
+            <label>BO</label>
+            <input type="number" id="syncBo" min="0" step="any" oninput="syncFromPanel('Bo')">
+        </div>
+        <div class="sync-cell">
+            <button class="clear-btn" onclick="clearAllQty()">CLEAR</button>
+        </div>
+    </div>
 
 <table>
     <thead>
@@ -141,11 +212,11 @@ input:focus {
 
     <!-- ROW 1 -->
     <tr>
-        <td class="miki">REG</td>
+        <td class="miki">DRY</td>
         <td>
             <input type="number" id="qtyReg"
                    min="0" step="any"
-                   oninput="calculate()">
+                   oninput="syncFromTable('Reg')">
         </td>
         <td>
             <input type="number" id="priceReg"
@@ -162,7 +233,7 @@ input:focus {
         <td>
             <input type="number" id="qtyFresh"
                    min="0" step="any"
-                   oninput="calculate()">
+                   oninput="syncFromTable('Fresh')">
         </td>
         <td>
             <input type="number" id="priceFresh"
@@ -179,7 +250,7 @@ input:focus {
         <td>
             <input type="number" id="qtyCab"
                    min="0" step="any"
-                   oninput="calculate()">
+                   oninput="syncFromTable('Cab')">
         </td>
         <td>
             <input type="number" id="priceCab"
@@ -196,7 +267,7 @@ input:focus {
         <td>
             <input type="number" id="qtyBo"
                    min="0" step="any"
-                   oninput="calculate()">
+                   oninput="syncFromTable('Bo')">
         </td>
         <td>
             <input type="number" id="priceBo"
@@ -215,7 +286,7 @@ input:focus {
         <td class="amount" id="totalAmount">0.00</td>
     </tr>
 
-    <!-- ROW 6: BAL (Added) -->
+    <!-- ROW 6: BAL -->
     <tr>
         <td class="miki">BAL</td>
         <td>
@@ -232,7 +303,7 @@ input:focus {
         <td class="amount" id="amountBal">0.00</td>
     </tr>
 
-    <!-- ROW 7: PAY (Deducted) -->
+    <!-- ROW 7: PAY -->
     <tr>
         <td class="miki">PAY</td>
         <td>
@@ -279,6 +350,33 @@ function formatMoney(value) {
     });
 }
 
+function syncFromPanel(type) {
+    const val = document.getElementById("sync" + type).value;
+    // Map Dry to Reg
+    const targetId = type === "Dry" ? "qtyReg" : "qty" + type;
+    document.getElementById(targetId).value = val;
+    calculate();
+}
+
+function syncFromTable(type) {
+    const targetId = type === "Reg" ? "syncDry" : "sync" + type;
+    const val = document.getElementById("qty" + type).value;
+    const syncInput = document.getElementById(targetId);
+    if (syncInput) {
+        syncInput.value = val;
+    }
+    calculate();
+}
+
+function clearAllQty() {
+    const qtyIds = ["qtyReg", "qtyFresh", "qtyCab", "qtyBo", "qtyBal", "qtyPay", "syncDry", "syncFresh", "syncCab", "syncBo"];
+    qtyIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+    });
+    calculate();
+}
+
 function calculate() {
 
     const regQty = getNumber("qtyReg");
@@ -305,48 +403,30 @@ function calculate() {
     const payPrice = getNumber("pricePay");
     const payAmount = payQty * payPrice;
 
-    // TOTAL = REG + FRESH + CAB - BO
     const total =
         regAmount +
         freshAmount +
         cabAmount -
         boAmount;
 
-    // NET TOTAL = TOTAL + BAL - PAY
     const netTotal =
         total +
         balAmount -
         payAmount;
 
-    document.getElementById("amountReg").textContent =
-        formatMoney(regAmount);
-
-    document.getElementById("amountFresh").textContent =
-        formatMoney(freshAmount);
-
-    document.getElementById("amountCab").textContent =
-        formatMoney(cabAmount);
-
-    document.getElementById("amountBo").textContent =
-        formatMoney(boAmount);
-
-    document.getElementById("totalAmount").textContent =
-        formatMoney(total);
-
-    document.getElementById("amountBal").textContent =
-        formatMoney(balAmount);
-
-    document.getElementById("amountPay").textContent =
-        formatMoney(payAmount);
-
-    document.getElementById("netTotalAmount").textContent =
-        formatMoney(netTotal);
+    document.getElementById("amountReg").textContent = formatMoney(regAmount);
+    document.getElementById("amountFresh").textContent = formatMoney(freshAmount);
+    document.getElementById("amountCab").textContent = formatMoney(cabAmount);
+    document.getElementById("amountBo").textContent = formatMoney(boAmount);
+    document.getElementById("totalAmount").textContent = formatMoney(total);
+    document.getElementById("amountBal").textContent = formatMoney(balAmount);
+    document.getElementById("amountPay").textContent = formatMoney(payAmount);
+    document.getElementById("netTotalAmount").textContent = formatMoney(netTotal);
 
     saveData();
 }
 
 function saveData() {
-
     const data = {
         qtyReg: document.getElementById("qtyReg").value,
         priceReg: document.getElementById("priceReg").value,
@@ -374,9 +454,7 @@ function saveData() {
 }
 
 function loadData() {
-
-    const saved =
-        localStorage.getItem("miki_table_data");
+    const saved = localStorage.getItem("miki_table_data");
 
     if (!saved) {
         calculate();
@@ -386,15 +464,19 @@ function loadData() {
     const data = JSON.parse(saved);
 
     document.getElementById("qtyReg").value = data.qtyReg || "";
+    document.getElementById("syncDry").value = data.qtyReg || "";
     document.getElementById("priceReg").value = data.priceReg || "45";
 
     document.getElementById("qtyFresh").value = data.qtyFresh || "";
+    document.getElementById("syncFresh").value = data.qtyFresh || "";
     document.getElementById("priceFresh").value = data.priceFresh || "45";
 
     document.getElementById("qtyCab").value = data.qtyCab || "";
+    document.getElementById("syncCab").value = data.qtyCab || "";
     document.getElementById("priceCab").value = data.priceCab || "45";
 
     document.getElementById("qtyBo").value = data.qtyBo || "";
+    document.getElementById("syncBo").value = data.qtyBo || "";
     document.getElementById("priceBo").value = data.priceBo || "45";
 
     document.getElementById("qtyBal").value = data.qtyBal || "";
