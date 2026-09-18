@@ -133,136 +133,93 @@ input:focus {
 
     <thead>
         <tr>
-            <th>Miki</th>
-            <th>Qty</th>
-            <th>Unit Price</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
+<tbody>
 
-    <tbody>
+    <!-- ROW 1 -->
+    <tr>
+        <td class="miki">REG</td>
+        <td>
+            <input type="number" id="qtyReg"
+                   min="0" step="any"
+                   oninput="calculate()">
+        </td>
+        <td>
+            <input type="number" id="priceReg"
+                   min="0" step="any"
+                   value="45"
+                   oninput="calculate()">
+        </td>
+        <td class="amount" id="amountReg">0.00</td>
+    </tr>
 
-        <!-- ROW 1 -->
-        <tr>
-            <td class="miki">REG</td>
+    <!-- ROW 2 -->
+    <tr>
+        <td class="miki">FRESH</td>
+        <td>
+            <input type="number" id="qtyFresh"
+                   min="0" step="any"
+                   oninput="calculate()">
+        </td>
+        <td>
+            <input type="number" id="priceFresh"
+                   min="0" step="any"
+                   value="45"
+                   oninput="calculate()">
+        </td>
+        <td class="amount" id="amountFresh">0.00</td>
+    </tr>
 
-            <td>
-                <input
-                    type="number"
-                    id="qtyReg"
-                    min="0"
-                    step="any"
-                    oninput="calculate()">
-            </td>
+    <!-- ROW 3 -->
+    <tr>
+        <td class="miki">CAB</td>
+        <td>
+            <input type="number" id="qtyCab"
+                   min="0" step="any"
+                   oninput="calculate()">
+        </td>
+        <td>
+            <input type="number" id="priceCab"
+                   min="0" step="any"
+                   value="45"
+                   oninput="calculate()">
+        </td>
+        <td class="amount" id="amountCab">0.00</td>
+    </tr>
 
-            <td>
-                <input
-                    type="number"
-                    id="priceReg"
-                    min="0"
-                    step="any"
-                    value="45"
-                    oninput="calculate()">
-            </td>
+    <!-- ROW 4 -->
+    <tr>
+        <td class="miki">BO</td>
+        <td>
+            <input type="number" id="qtyBo"
+                   min="0" step="any"
+                   oninput="calculate()">
+        </td>
+        <td>
+            <input type="number" id="priceBo"
+                   min="0" step="any"
+                   value="45"
+                   oninput="calculate()">
+        </td>
+        <td class="amount" id="amountBo">0.00</td>
+    </tr>
 
-            <td class="amount" id="amountReg">0.00</td>
-        </tr>
+    <!-- ROW 5 -->
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
 
-        <!-- ROW 2 -->
-        <tr>
-            <td class="miki">FRESH</td>
+    <!-- ROW 6 -->
+    <tr>
+        <td class="miki">TOTAL</td>
+        <td></td>
+        <td></td>
+        <td class="amount" id="totalAmount">0.00</td>
+    </tr>
 
-            <td>
-                <input
-                    type="number"
-                    id="qtyFresh"
-                    min="0"
-                    step="any"
-                    oninput="calculate()">
-            </td>
-
-            <td>
-                <input
-                    type="number"
-                    id="priceFresh"
-                    min="0"
-                    step="any"
-                    value="45"
-                    oninput="calculate()">
-            </td>
-
-            <td class="amount" id="amountFresh">0.00</td>
-        </tr>
-
-        <!-- ROW 3 -->
-        <tr>
-            <td class="miki">CAB</td>
-
-            <td>
-                <input
-                    type="number"
-                    id="qtyCab"
-                    min="0"
-                    step="any"
-                    oninput="calculate()">
-            </td>
-
-            <td>
-                <input
-                    type="number"
-                    id="priceCab"
-                    min="0"
-                    step="any"
-                    value="45"
-                    oninput="calculate()">
-            </td>
-
-            <td class="amount" id="amountCab">0.00</td>
-        </tr>
-
-        <!-- ROW 4 -->
-        <tr>
-            <td class="miki">BO</td>
-
-            <td>
-                <input
-                    type="number"
-                    id="qtyBo"
-                    min="0"
-                    step="any"
-                    oninput="calculate()">
-            </td>
-
-            <td>
-                <input
-                    type="number"
-                    id="priceBo"
-                    min="0"
-                    step="any"
-                    value="45"
-                    oninput="calculate()">
-            </td>
-
-            <td class="amount" id="amountBo">0.00</td>
-        </tr>
-
-        <!-- ROW 5 - BLANK -->
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <!-- ROW 6 - TOTAL -->
-        <tr>
-            <td class="total-label">TOTAL</td>
-            <td></td>
-            <td></td>
-            <td class="total-amount" id="totalAmount">0.00</td>
-        </tr>
-
-    </tbody>
+</tbody>
 
 </table>
 
