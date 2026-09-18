@@ -4,301 +4,279 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Miki Calculator</title>
+<title>Miki Table</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    body {
-        margin: 0;
-        padding: 20px 12px;
-        font-family: Arial, sans-serif;
-        background: #f3f4f6;
-        color: #111827;
-    }
+body {
+    margin: 0;
+    padding: 20px 10px;
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+}
 
-    .app {
-        max-width: 600px;
-        margin: auto;
-    }
+.table-box {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+}
 
-    h1 {
-        text-align: center;
-        margin: 5px 0 20px;
-        font-size: 24px;
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-    .table-box {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.12);
-    }
+th {
+    background: #111827;
+    color: white;
+    padding: 12px 6px;
+    font-size: 14px;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+td {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 9px 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.miki {
+    text-align: left;
+    padding-left: 12px;
+    font-weight: bold;
+}
+
+input {
+    width: 85px;
+    max-width: 100%;
+    padding: 8px 4px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    text-align: center;
+    font-size: 16px;
+    background: white;
+}
+
+input:focus {
+    outline: 2px solid #94a3b8;
+}
+
+.amount {
+    font-weight: bold;
+}
+
+.total-row td {
+    background: #e5e7eb;
+    border-top: 2px solid #9ca3af;
+    border-bottom: none;
+    font-weight: bold;
+}
+
+.total-label {
+    text-align: left;
+    padding-left: 12px;
+}
+
+.total-amount {
+    font-size: 18px;
+}
+
+@media (max-width: 400px) {
 
     th {
-        background: #111827;
-        color: white;
-        padding: 12px 6px;
-        font-size: 14px;
+        font-size: 12px;
+        padding: 10px 3px;
     }
 
     td {
-        border-bottom: 1px solid #e5e7eb;
-        padding: 9px 5px;
-        text-align: center;
-        font-size: 16px;
-    }
-
-    tr:last-child td {
-        border-bottom: none;
-    }
-
-    .miki {
-        font-weight: bold;
-        text-align: left;
-        padding-left: 12px;
+        font-size: 14px;
+        padding: 8px 3px;
     }
 
     input {
-        width: 100%;
-        max-width: 90px;
-        padding: 9px 5px;
-        border: 1px solid #cbd5e1;
-        border-radius: 7px;
-        text-align: center;
-        font-size: 16px;
-        background: white;
-    }
-
-    input:focus {
-        outline: 2px solid #94a3b8;
-        border-color: #64748b;
-    }
-
-    .amount {
-        font-weight: bold;
-    }
-
-    .blank-row td {
-        height: 35px;
-        border-bottom: none;
-    }
-
-    .total-row td {
-        background: #e5e7eb;
-        font-weight: bold;
-        border-top: 2px solid #9ca3af;
-    }
-
-    .total-label {
-        text-align: left;
-        padding-left: 12px;
+        width: 70px;
+        font-size: 14px;
     }
 
     .total-amount {
-        font-size: 19px;
+        font-size: 16px;
     }
-
-    .note {
-        margin-top: 15px;
-        text-align: center;
-        font-size: 12px;
-        color: #6b7280;
-    }
-
-    @media (max-width: 400px) {
-        th {
-            font-size: 12px;
-        }
-
-        td {
-            font-size: 14px;
-        }
-
-        input {
-            max-width: 75px;
-            font-size: 14px;
-            padding: 8px 3px;
-        }
-
-        .total-amount {
-            font-size: 17px;
-        }
-    }
+}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="table-box">
 
-    <h1>Miki Calculator</h1>
+<table>
 
-    <div class="table-box">
+    <thead>
+        <tr>
+            <th>Miki</th>
+            <th>Qty</th>
+            <th>Unit Price</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Miki</th>
-                    <th>Qty</th>
-                    <th>Unit Price</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
+    <tbody>
 
-            <tbody>
+        <!-- ROW 1 - REG -->
+        <tr>
+            <td class="miki">REG</td>
 
-                <!-- REG -->
-                <tr>
-                    <td class="miki">REG</td>
+            <td>
+                <input
+                    type="number"
+                    id="qtyReg"
+                    min="0"
+                    step="any"
+                    oninput="calculate()">
+            </td>
 
-                    <td>
-                        <input
-                            type="number"
-                            id="qtyReg"
-                            min="0"
-                            step="any"
-                            placeholder=""
-                            oninput="calculate()">
-                    </td>
+            <td>
+                <input
+                    type="number"
+                    id="priceReg"
+                    min="0"
+                    step="any"
+                    value="45"
+                    oninput="calculate()">
+            </td>
 
-                    <td>
-                        <input
-                            type="number"
-                            id="priceReg"
-                            min="0"
-                            step="any"
-                            value="45"
-                            oninput="calculate()">
-                    </td>
+            <td class="amount" id="amountReg">
+                0.00
+            </td>
+        </tr>
 
-                    <td class="amount" id="amountReg">0.00</td>
-                </tr>
+        <!-- ROW 2 - FRESH -->
+        <tr>
+            <td class="miki">FRESH</td>
 
-                <!-- FRESH -->
-                <tr>
-                    <td class="miki">FRESH</td>
+            <td>
+                <input
+                    type="number"
+                    id="qtyFresh"
+                    min="0"
+                    step="any"
+                    oninput="calculate()">
+            </td>
 
-                    <td>
-                        <input
-                            type="number"
-                            id="qtyFresh"
-                            min="0"
-                            step="any"
-                            placeholder=""
-                            oninput="calculate()">
-                    </td>
+            <td>
+                <input
+                    type="number"
+                    id="priceFresh"
+                    min="0"
+                    step="any"
+                    value="45"
+                    oninput="calculate()">
+            </td>
 
-                    <td>
-                        <input
-                            type="number"
-                            id="priceFresh"
-                            min="0"
-                            step="any"
-                            value="45"
-                            oninput="calculate()">
-                    </td>
+            <td class="amount" id="amountFresh">
+                0.00
+            </td>
+        </tr>
 
-                    <td class="amount" id="amountFresh">0.00</td>
-                </tr>
+        <!-- ROW 3 - CAB -->
+        <tr>
+            <td class="miki">CAB</td>
 
-                <!-- CAB -->
-                <tr>
-                    <td class="miki">CAB</td>
+            <td>
+                <input
+                    type="number"
+                    id="qtyCab"
+                    min="0"
+                    step="any"
+                    oninput="calculate()">
+            </td>
 
-                    <td>
-                        <input
-                            type="number"
-                            id="qtyCab"
-                            min="0"
-                            step="any"
-                            placeholder=""
-                            oninput="calculate()">
-                    </td>
+            <td>
+                <input
+                    type="number"
+                    id="priceCab"
+                    min="0"
+                    step="any"
+                    value="45"
+                    oninput="calculate()">
+            </td>
 
-                    <td>
-                        <input
-                            type="number"
-                            id="priceCab"
-                            min="0"
-                            step="any"
-                            value="45"
-                            oninput="calculate()">
-                    </td>
+            <td class="amount" id="amountCab">
+                0.00
+            </td>
+        </tr>
 
-                    <td class="amount" id="amountCab">0.00</td>
-                </tr>
+        <!-- ROW 4 - BO -->
+        <tr>
+            <td class="miki">BO</td>
 
-                <!-- BO -->
-                <tr>
-                    <td class="miki">BO</td>
+            <td>
+                <input
+                    type="number"
+                    id="qtyBo"
+                    min="0"
+                    step="any"
+                    oninput="calculate()">
+            </td>
 
-                    <td>
-                        <input
-                            type="number"
-                            id="qtyBo"
-                            min="0"
-                            step="any"
-                            placeholder=""
-                            oninput="calculate()">
-                    </td>
+            <td>
+                <input
+                    type="number"
+                    id="priceBo"
+                    min="0"
+                    step="any"
+                    value="45"
+                    oninput="calculate()">
+            </td>
 
-                    <td>
-                        <input
-                            type="number"
-                            id="priceBo"
-                            min="0"
-                            step="any"
-                            value="45"
-                            oninput="calculate()">
-                    </td>
+            <td class="amount" id="amountBo">
+                0.00
+            </td>
+        </tr>
 
-                    <td class="amount" id="amountBo">0.00</td>
-                </tr>
+        <!-- ROW 5 - BLANK -->
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
 
-                <!-- BLANK ROW -->
-                <tr class="blank-row">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+        <!-- ROW 6 - TOTAL -->
+        <tr class="total-row">
+            <td class="total-label">TOTAL</td>
+            <td></td>
+            <td></td>
+            <td class="total-amount" id="totalAmount">
+                0.00
+            </td>
+        </tr>
 
-                <!-- TOTAL -->
-                <tr class="total-row">
-                    <td class="total-label">TOTAL</td>
-                    <td></td>
-                    <td></td>
-                    <td class="total-amount" id="totalAmount">0.00</td>
-                </tr>
+    </tbody>
 
-            </tbody>
-        </table>
-
-    </div>
-
-    <div class="note">
-        Total = REG + FRESH + CAB − BO
-    </div>
+</table>
 
 </div>
 
 <script>
 
-function getNumber(id) {
-    const value = parseFloat(document.getElementById(id).value);
+function number(id) {
+    const value = parseFloat(
+        document.getElementById(id).value
+    );
+
     return isNaN(value) ? 0 : value;
 }
 
-function formatAmount(value) {
-    return value.toLocaleString('en-US', {
+function money(value) {
+    return value.toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
@@ -307,45 +285,49 @@ function formatAmount(value) {
 function calculate() {
 
     // REG
-    const qtyReg = getNumber("qtyReg");
-    const priceReg = getNumber("priceReg");
-    const amountReg = qtyReg * priceReg;
+    const regQty = number("qtyReg");
+    const regPrice = number("priceReg");
+    const regAmount = regQty * regPrice;
 
     // FRESH
-    const qtyFresh = getNumber("qtyFresh");
-    const priceFresh = getNumber("priceFresh");
-    const amountFresh = qtyFresh * priceFresh;
+    const freshQty = number("qtyFresh");
+    const freshPrice = number("priceFresh");
+    const freshAmount = freshQty * freshPrice;
 
     // CAB
-    const qtyCab = getNumber("qtyCab");
-    const priceCab = getNumber("priceCab");
-    const amountCab = qtyCab * priceCab;
+    const cabQty = number("qtyCab");
+    const cabPrice = number("priceCab");
+    const cabAmount = cabQty * cabPrice;
 
     // BO
-    const qtyBo = getNumber("qtyBo");
-    const priceBo = getNumber("priceBo");
-    const amountBo = (qtyBo / 2) * priceBo;
+    const boQty = number("qtyBo");
+    const boPrice = number("priceBo");
+    const boAmount = (boQty / 2) * boPrice;
 
     // TOTAL
-    const total = amountReg + amountFresh + amountCab - amountBo;
+    // REG + FRESH + CAB - BO
+    const total =
+        regAmount +
+        freshAmount +
+        cabAmount -
+        boAmount;
 
-    // Display
+    // Display amounts
     document.getElementById("amountReg").textContent =
-        formatAmount(amountReg);
+        money(regAmount);
 
     document.getElementById("amountFresh").textContent =
-        formatAmount(amountFresh);
+        money(freshAmount);
 
     document.getElementById("amountCab").textContent =
-        formatAmount(amountCab);
+        money(cabAmount);
 
     document.getElementById("amountBo").textContent =
-        formatAmount(amountBo);
+        money(boAmount);
 
     document.getElementById("totalAmount").textContent =
-        formatAmount(total);
+        money(total);
 
-    // Save values
     saveData();
 }
 
@@ -366,14 +348,15 @@ function saveData() {
     };
 
     localStorage.setItem(
-        "miki_calculator_data",
+        "miki_table_data",
         JSON.stringify(data)
     );
 }
 
 function loadData() {
 
-    const saved = localStorage.getItem("miki_calculator_data");
+    const saved =
+        localStorage.getItem("miki_table_data");
 
     if (!saved) {
         calculate();
@@ -382,17 +365,29 @@ function loadData() {
 
     const data = JSON.parse(saved);
 
-    document.getElementById("qtyReg").value = data.qtyReg || "";
-    document.getElementById("priceReg").value = data.priceReg || "45";
+    document.getElementById("qtyReg").value =
+        data.qtyReg || "";
 
-    document.getElementById("qtyFresh").value = data.qtyFresh || "";
-    document.getElementById("priceFresh").value = data.priceFresh || "45";
+    document.getElementById("priceReg").value =
+        data.priceReg || "45";
 
-    document.getElementById("qtyCab").value = data.qtyCab || "";
-    document.getElementById("priceCab").value = data.priceCab || "45";
+    document.getElementById("qtyFresh").value =
+        data.qtyFresh || "";
 
-    document.getElementById("qtyBo").value = data.qtyBo || "";
-    document.getElementById("priceBo").value = data.priceBo || "45";
+    document.getElementById("priceFresh").value =
+        data.priceFresh || "45";
+
+    document.getElementById("qtyCab").value =
+        data.qtyCab || "";
+
+    document.getElementById("priceCab").value =
+        data.priceCab || "45";
+
+    document.getElementById("qtyBo").value =
+        data.qtyBo || "";
+
+    document.getElementById("priceBo").value =
+        data.priceBo || "45";
 
     calculate();
 }
