@@ -23,27 +23,33 @@ body {
     max-width: 600px;
     margin: 0 auto;
     background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    border: 1px solid #d1d5db;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
+}
+
+th,
+td {
+    border: 1px solid #d1d5db;
+    height: 52px;
+    padding: 6px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 th {
     background: #111827;
     color: white;
-    padding: 12px 6px;
     font-size: 14px;
+    font-weight: bold;
 }
 
 td {
-    border-bottom: 1px solid #e5e7eb;
-    padding: 9px 5px;
-    text-align: center;
+    background: white;
     font-size: 16px;
 }
 
@@ -56,9 +62,10 @@ td {
 input {
     width: 85px;
     max-width: 100%;
-    padding: 8px 4px;
-    border: 1px solid #cbd5e1;
-    border-radius: 7px;
+    height: 36px;
+    padding: 5px;
+    border: 1px solid #9ca3af;
+    border-radius: 5px;
     text-align: center;
     font-size: 16px;
     background: white;
@@ -72,41 +79,47 @@ input:focus {
     font-weight: bold;
 }
 
-.total-row td {
-    background: #e5e7eb;
-    border-top: 2px solid #9ca3af;
-    border-bottom: none;
-    font-weight: bold;
-}
-
+/* TOTAL ROW HAS EXACTLY THE SAME LOOK AS OTHER ROWS */
 .total-label {
     text-align: left;
     padding-left: 12px;
+    font-weight: bold;
 }
 
 .total-amount {
-    font-size: 18px;
+    font-weight: bold;
+    font-size: 16px;
 }
 
 @media (max-width: 400px) {
 
+    body {
+        padding: 15px 5px;
+    }
+
+    th,
+    td {
+        height: 48px;
+        padding: 4px;
+    }
+
     th {
         font-size: 12px;
-        padding: 10px 3px;
     }
 
     td {
         font-size: 14px;
-        padding: 8px 3px;
     }
 
     input {
         width: 70px;
+        height: 32px;
         font-size: 14px;
     }
 
-    .total-amount {
-        font-size: 16px;
+    .miki,
+    .total-label {
+        padding-left: 8px;
     }
 }
 </style>
@@ -129,7 +142,7 @@ input:focus {
 
     <tbody>
 
-        <!-- ROW 1 - REG -->
+        <!-- ROW 1 -->
         <tr>
             <td class="miki">REG</td>
 
@@ -152,12 +165,10 @@ input:focus {
                     oninput="calculate()">
             </td>
 
-            <td class="amount" id="amountReg">
-                0.00
-            </td>
+            <td class="amount" id="amountReg">0.00</td>
         </tr>
 
-        <!-- ROW 2 - FRESH -->
+        <!-- ROW 2 -->
         <tr>
             <td class="miki">FRESH</td>
 
@@ -180,12 +191,10 @@ input:focus {
                     oninput="calculate()">
             </td>
 
-            <td class="amount" id="amountFresh">
-                0.00
-            </td>
+            <td class="amount" id="amountFresh">0.00</td>
         </tr>
 
-        <!-- ROW 3 - CAB -->
+        <!-- ROW 3 -->
         <tr>
             <td class="miki">CAB</td>
 
@@ -208,12 +217,10 @@ input:focus {
                     oninput="calculate()">
             </td>
 
-            <td class="amount" id="amountCab">
-                0.00
-            </td>
+            <td class="amount" id="amountCab">0.00</td>
         </tr>
 
-        <!-- ROW 4 - BO -->
+        <!-- ROW 4 -->
         <tr>
             <td class="miki">BO</td>
 
@@ -236,9 +243,7 @@ input:focus {
                     oninput="calculate()">
             </td>
 
-            <td class="amount" id="amountBo">
-                0.00
-            </td>
+            <td class="amount" id="amountBo">0.00</td>
         </tr>
 
         <!-- ROW 5 - BLANK -->
@@ -250,13 +255,11 @@ input:focus {
         </tr>
 
         <!-- ROW 6 - TOTAL -->
-        <tr class="total-row">
+        <tr>
             <td class="total-label">TOTAL</td>
             <td></td>
             <td></td>
-            <td class="total-amount" id="totalAmount">
-                0.00
-            </td>
+            <td class="total-amount" id="totalAmount">0.00</td>
         </tr>
 
     </tbody>
@@ -267,7 +270,7 @@ input:focus {
 
 <script>
 
-function number(id) {
+function getNumber(id) {
     const value = parseFloat(
         document.getElementById(id).value
     );
@@ -275,7 +278,7 @@ function number(id) {
     return isNaN(value) ? 0 : value;
 }
 
-function money(value) {
+function formatMoney(value) {
     return value.toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
@@ -284,49 +287,45 @@ function money(value) {
 
 function calculate() {
 
-    // REG
-    const regQty = number("qtyReg");
-    const regPrice = number("priceReg");
+    const regQty = getNumber("qtyReg");
+    const regPrice = getNumber("priceReg");
     const regAmount = regQty * regPrice;
 
-    // FRESH
-    const freshQty = number("qtyFresh");
-    const freshPrice = number("priceFresh");
+    const freshQty = getNumber("qtyFresh");
+    const freshPrice = getNumber("priceFresh");
     const freshAmount = freshQty * freshPrice;
 
-    // CAB
-    const cabQty = number("qtyCab");
-    const cabPrice = number("priceCab");
+    const cabQty = getNumber("qtyCab");
+    const cabPrice = getNumber("priceCab");
     const cabAmount = cabQty * cabPrice;
 
-    // BO
-    const boQty = number("qtyBo");
-    const boPrice = number("priceBo");
+    const boQty = getNumber("qtyBo");
+    const boPrice = getNumber("priceBo");
+
+    // BO = Qty / 2 × Unit Price
     const boAmount = (boQty / 2) * boPrice;
 
-    // TOTAL
-    // REG + FRESH + CAB - BO
+    // TOTAL = REG + FRESH + CAB - BO
     const total =
         regAmount +
         freshAmount +
         cabAmount -
         boAmount;
 
-    // Display amounts
     document.getElementById("amountReg").textContent =
-        money(regAmount);
+        formatMoney(regAmount);
 
     document.getElementById("amountFresh").textContent =
-        money(freshAmount);
+        formatMoney(freshAmount);
 
     document.getElementById("amountCab").textContent =
-        money(cabAmount);
+        formatMoney(cabAmount);
 
     document.getElementById("amountBo").textContent =
-        money(boAmount);
+        formatMoney(boAmount);
 
     document.getElementById("totalAmount").textContent =
-        money(total);
+        formatMoney(total);
 
     saveData();
 }
