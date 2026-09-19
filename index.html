@@ -91,8 +91,8 @@ table input {
     border: none;
 }
 
-.table-box-2 th {
-    font-size: 11px;
+.table-box-2 th, th.lockable-header {
+    font-size: 13px;
     cursor: pointer;
     user-select: none;
 }
@@ -190,7 +190,7 @@ table input:focus {
         <tr>
             <th>Item</th>
             <th>Qty</th>
-            <th>Price</th>
+            <th id="priceLockHeader" class="lockable-header" onclick="handlePriceKeyClick()" title="Tap 5 times to Lock/Unlock Prices">Price 🔑</th>
             <th>Amount</th>
         </tr>
     </thead>
@@ -198,25 +198,25 @@ table input:focus {
     <tr>
         <td class="miki">REG</td>
         <td><input type="number" id="qtyReg" min="0" step="any" oninput="syncFromTable('Reg')"></td>
-        <td><input type="number" id="priceReg" min="0" step="any" value="45" oninput="calculateMain()"></td>
+        <td><input type="number" id="priceReg" class="price-input" min="0" step="any" value="45" oninput="calculateMain()"></td>
         <td class="amount" id="amountReg">0</td>
     </tr>
     <tr>
         <td class="miki">FRESH</td>
         <td><input type="number" id="qtyFresh" min="0" step="any" oninput="syncFromTable('Fresh')"></td>
-        <td><input type="number" id="priceFresh" min="0" step="any" value="45" oninput="calculateMain()"></td>
+        <td><input type="number" id="priceFresh" class="price-input" min="0" step="any" value="45" oninput="calculateMain()"></td>
         <td class="amount" id="amountFresh">0</td>
     </tr>
     <tr>
         <td class="miki">CAB</td>
         <td><input type="number" id="qtyCab" min="0" step="any" oninput="syncFromTable('Cab')"></td>
-        <td><input type="number" id="priceCab" min="0" step="any" value="40" oninput="calculateMain()"></td>
+        <td><input type="number" id="priceCab" class="price-input" min="0" step="any" value="40" oninput="calculateMain()"></td>
         <td class="amount" id="amountCab">0</td>
     </tr>
     <tr>
         <td class="miki">BO</td>
         <td><input type="number" id="qtyBo" min="0" step="any" oninput="syncFromTable('Bo')"></td>
-        <td><input type="number" id="priceBo" min="0" step="any" value="45" oninput="calculateMain()"></td>
+        <td><input type="number" id="priceBo" class="price-input" min="0" step="any" value="45" oninput="calculateMain()"></td>
         <td class="amount" id="amountBo">0</td>
     </tr>
     <tr>
@@ -284,7 +284,7 @@ table input:focus {
     </colgroup>
     <thead>
         <tr>
-            <th id="lockHeader" onclick="handleKeyClick()" title="Tap 5 times to Lock/Unlock">🔑</th>
+            <th id="lockHeader" class="lockable-header" onclick="handleKeyClick()" title="Tap 5 times to Lock/Unlock">🔑</th>
             <th>Dry</th>
             <th>Fresh</th>
             <th>Cab</th>
@@ -323,9 +323,16 @@ table input:focus {
 
 <script>
 let activeRow = 1;
+
+// Table 2 (Name Column) Lock/Unlock vars
 let tapCount = 0;
 let tapTimer = null;
 let isLocked = false;
+
+// Table 1 (Price Columns) Lock/Unlock vars
+let priceTapCount = 0;
+let priceTapTimer = null;
+let isPriceLocked = false;
 
 function handleKeyClick() {
     tapCount++;
@@ -347,6 +354,31 @@ function toggleLockState(locked) {
 
     const nameInputs = document.querySelectorAll(".name-input");
     nameInputs.forEach(field => {
+        field.readOnly = locked;
+        field.style.backgroundColor = locked ? "#e5e7eb" : "white";
+    });
+}
+
+function handlePriceKeyClick() {
+    priceTapCount++;
+    clearTimeout(priceTapTimer);
+    priceTapTimer = setTimeout(() => {
+        priceTapCount = 0;
+    }, 1000);
+
+    if (priceTapCount >= 5) {
+        priceTapCount = 0;
+        isPriceLocked = !isPriceLocked;
+        togglePriceLockState(isPriceLocked);
+    }
+}
+
+function togglePriceLockState(locked) {
+    const header = document.getElementById("priceLockHeader");
+    header.textContent = locked ? "Price 🔒" : "Price 🔑";
+
+    const priceInputs = document.querySelectorAll(".price-input");
+    priceInputs.forEach(field => {
         field.readOnly = locked;
         field.style.backgroundColor = locked ? "#e5e7eb" : "white";
     });
@@ -488,13 +520,13 @@ function loadLedger() {
 
     for (let i = 1; i <= 16; i++) {
         if(ledgerData[`name_${i}`]) document.getElementById(`ledgerName_${i}`).value = ledgerData[`name_${i}`];
-        if(ledgerData[`dry_${i}`]) document.getElementById(`ledgerDry_${i}`).value = ledgerData[`dry_${i}`];
-        if(ledgerData[`fresh_${i}`]) document.getElementById(`ledgerFresh_${i}`).value = ledgerData[`fresh_${i}`];
-        if(ledgerData[`cab_${i}`]) document.getElementById(`ledgerCab_${i}`).value = ledgerData[`cab_${i}`];
-        if(ledgerData[`bo_${i}`]) document.getElementById(`ledgerBo_${i}`).value = ledgerData[`bo_${i}`];
-        if(ledgerData[`bal_${i}`]) document.getElementById(`ledgerBal_${i}`).value = ledgerData[`bal_${i}`];
-        if(ledgerData[`pay_${i}`]) document.getElementById(`ledgerPay_${i}`).value = ledgerData[`pay_${i}`];
-        if(ledgerData[`amount_${i}`]) document.getElementById(`ledgerAmount_${i}`).value = ledgerData[`amount_${i}`];
+        if(ledgerData[`dry_${i}`]) document.getElementById(`ledgerDry_${i}`].value = ledgerData[`dry_${i}`];
+        if(ledgerData[`fresh_${i}`]) document.getElementById(`ledgerFresh_${i}`].value = ledgerData[`fresh_${i}`];
+        if(ledgerData[`cab_${i}`]) document.getElementById(`ledgerCab_${i}`].value = ledgerData[`cab_${i}`];
+        if(ledgerData[`bo_${i}`]) document.getElementById(`ledgerBo_${i}`].value = ledgerData[`bo_${i}`];
+        if(ledgerData[`bal_${i}`]) document.getElementById(`ledgerBal_${i}`].value = ledgerData[`bal_${i}`];
+        if(ledgerData[`pay_${i}`]) document.getElementById(`ledgerPay_${i}`].value = ledgerData[`pay_${i}`];
+        if(ledgerData[`amount_${i}`]) document.getElementById(`ledgerAmount_${i}`].value = ledgerData[`amount_${i}`];
     }
     loadRowToMain(1);
     calculateLedgerTotals();
@@ -504,4 +536,4 @@ window.onload = loadLedger;
 </script>
 
 </body>
-        </html>
+</html>
