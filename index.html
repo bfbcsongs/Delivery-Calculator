@@ -71,7 +71,6 @@ table input {
     background: white;
 }
 
-/* Espesyal na laki para sa direct amount input ng Bal at Pay */
 .direct-amount-input {
     width: 100% !important;
     height: 24px !important;
@@ -198,7 +197,7 @@ table input:focus {
         <td class="miki">REG</td>
         <td>
             <input type="number" id="qtyReg"
-                   min="" step="any"
+                   min="0" step="any"
                    oninput="syncFromTable('Reg')">
         </td>
         <td>
@@ -207,7 +206,7 @@ table input:focus {
                    value="45"
                    oninput="calculate()">
         </td>
-        <td class="amount" id="amountReg">0.00</td>
+        <td class="amount" id="amountReg">0</td>
     </tr>
 
     <!-- ROW 2 -->
@@ -224,7 +223,7 @@ table input:focus {
                    value="45"
                    oninput="calculate()">
         </td>
-        <td class="amount" id="amountFresh">0.00</td>
+        <td class="amount" id="amountFresh">0</td>
     </tr>
 
     <!-- ROW 3 -->
@@ -241,7 +240,7 @@ table input:focus {
                    value="40"
                    oninput="calculate()">
         </td>
-        <td class="amount" id="amountCab">0.00</td>
+        <td class="amount" id="amountCab">0</td>
     </tr>
 
     <!-- ROW 4 -->
@@ -258,7 +257,7 @@ table input:focus {
                    value="45"
                    oninput="calculate()">
         </td>
-        <td class="amount" id="amountBo">0.00</td>
+        <td class="amount" id="amountBo">0</td>
     </tr>
 
     <!-- ROW 5: TOTAL -->  
@@ -266,16 +265,19 @@ table input:focus {
         <td class="miki">TOTAL</td>
         <td></td>
         <td></td>
-        <td class="amount" id="totalAmount">0.00</td>
+        <td class="amount" id="totalAmount">0</td>
     </tr>
 
     <!-- ROW 6: BAL (Direct Amount Input) -->
     <tr>
-        <td class="miki">Bal</td>
+        <td class="miki">BAL</td>
+        <td></td>
+        <td></td>
         <td>
-            <input type="number" id="amountbal"
+            <input type="number" id="inputBal"
                    min="0" step="any"
-                   oninput="syncFromTable('bal')">
+                   class="direct-amount-input"
+                   oninput="calculate()">
         </td>
     </tr>
 
@@ -285,11 +287,10 @@ table input:focus {
         <td></td>
         <td></td>
         <td>
-            <td class="miki">Pay</td>
-        <td>
-            <input type="number" id="amountpay"
+            <input type="number" id="inputPay"
                    min="0" step="any"
-                   oninput="syncFromTable('pay')">
+                   class="direct-amount-input"
+                   oninput="calculate()">
         </td>
     </tr>
 
@@ -298,7 +299,7 @@ table input:focus {
         <td class="miki">NET TOTAL</td>
         <td></td>
         <td></td>
-        <td class="amount" id="netTotalAmount">0.00</td>
+        <td class="amount" id="netTotalAmount">0</td>
     </tr>
 
     </tbody>
@@ -340,8 +341,9 @@ function getNumber(id) {
 }
 
 function formatMoney(value) {
+    // Ginawa nating minimumFractionDigits: 0 para mawala ang .00 kung whole number
     return value.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
+        minimumFractionDigits: 0,
         maximumFractionDigits: 2
     });
 }
@@ -390,7 +392,6 @@ function calculate() {
     const boPrice = getNumber("priceBo");
     const boAmount = (boQty / 2) * boPrice;
 
-    // Direktang kinukuha ang amount ng Bal at Pay
     const balAmount = getNumber("inputBal");
     const payAmount = getNumber("inputPay");
 
@@ -400,7 +401,6 @@ function calculate() {
         cabAmount -
         boAmount;
 
-    // NET TOTAL = TOTAL + BAL - PAY
     const netTotal =
         total +
         balAmount -
@@ -477,4 +477,4 @@ window.onload = loadData;
 </script>
 
 </body>
-</html>
+    </html>
