@@ -262,7 +262,7 @@ table input:focus {
         <td class="amount" id="totalAmount">0.00</td>
     </tr>
 
-    <!-- ROW 6: BAL (Manual Input) -->
+    <!-- ROW 6: BAL (Manual Input, Empty Price) -->
     <tr>
         <td class="miki">BAL</td>
         <td>
@@ -273,13 +273,12 @@ table input:focus {
         <td>
             <input type="number" id="priceBal"
                    min="0" step="any"
-                   value="0"
                    oninput="calculate()">
         </td>
         <td class="amount" id="amountBal">0.00</td>
     </tr>
 
-    <!-- ROW 7: PAY (Manual Input) -->
+    <!-- ROW 7: PAY (Manual Input, Empty Price) -->
     <tr>
         <td class="miki">PAY</td>
         <td>
@@ -290,7 +289,6 @@ table input:focus {
         <td>
             <input type="number" id="pricePay"
                    min="0" step="any"
-                   value="0"
                    oninput="calculate()">
         </td>
         <td class="amount" id="amountPay">0.00</td>
@@ -478,10 +476,10 @@ function loadData() {
     document.getElementById("priceBo").value = data.priceBo || "45";
 
     document.getElementById("qtyBal").value = data.qtyBal || "";
-    document.getElementById("priceBal").value = data.priceBal || "45";
+    document.getElementById("priceBal").value = data.priceBal || "";
 
     document.getElementById("qtyPay").value = data.qtyPay || "";
-    document.getElementById("pricePay").value = data.pricePay || "45";
+    document.getElementById("pricePay").value = data.pricePay || "";
 
     calculate();
 }
