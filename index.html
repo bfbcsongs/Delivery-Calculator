@@ -586,6 +586,18 @@ function loadLedger() {
 
 window.onload = loadLedger;
 </script>
+<script>
+// Service Worker Registration for Offline Use
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js?v=1', { scope: './' })
+            .then(reg => console.log('Service Worker Registered!', reg))
+            .catch(err => console.log('Service Worker Registration Failed:', err));
+    });
+}
+</script>
 
+</body>
+</html>
 </body>
 </html>
