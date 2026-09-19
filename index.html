@@ -231,7 +231,7 @@ table input:focus {
         <td>
             <input type="number" id="priceCab"
                    min="0" step="any"
-                   value="45"
+                   value="40"
                    oninput="calculate()">
         </td>
         <td class="amount" id="amountCab">0.00</td>
@@ -262,7 +262,7 @@ table input:focus {
         <td class="amount" id="totalAmount">0.00</td>
     </tr>
 
-    <!-- ROW 6: BAL (Manual Input, Empty Price) -->
+    <!-- ROW 6: BAL -->
     <tr>
         <td class="miki">BAL</td>
         <td>
@@ -278,7 +278,7 @@ table input:focus {
         <td class="amount" id="amountBal">0.00</td>
     </tr>
 
-    <!-- ROW 7: PAY (Manual Input, Empty Price) -->
+    <!-- ROW 7: PAY -->
     <tr>
         <td class="miki">PAY</td>
         <td>
@@ -469,16 +469,18 @@ function loadData() {
 
     document.getElementById("qtyCab").value = data.qtyCab || "";
     document.getElementById("syncCab").value = data.qtyCab || "";
-    document.getElementById("priceCab").value = data.priceCab || "45";
+    document.getElementById("priceCab").value = data.priceCab || "40";
 
     document.getElementById("qtyBo").value = data.qtyBo || "";
     document.getElementById("syncBo").value = data.qtyBo || "";
     document.getElementById("priceBo").value = data.priceBo || "45";
 
     document.getElementById("qtyBal").value = data.qtyBal || "";
+    // Dito nilagyan natin ng || "" para blangko kung walang naka-save
     document.getElementById("priceBal").value = data.priceBal || "";
 
     document.getElementById("qtyPay").value = data.qtyPay || "";
+    // Dito rin nilagyan ng || "" para blangko din
     document.getElementById("pricePay").value = data.pricePay || "";
 
     calculate();
@@ -489,4 +491,4 @@ window.onload = loadData;
 </script>
 
 </body>
-</html>
+    </html>
