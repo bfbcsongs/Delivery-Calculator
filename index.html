@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Miki Table</title>
+<title>Miki Table & Ledger</title>
 
 <style>
 * {
@@ -21,7 +21,7 @@ body {
 .table-box {
     width: 100%;
     max-width: 600px;
-    margin: 0 auto;
+    margin: 0 auto 20px auto;
     background: white;
     border: 1px solid #d1d5db;
 }
@@ -65,15 +65,36 @@ td {
 }
 
 table input {
-    width: 85px;
+    width: 100%;
     max-width: 100%;
     height: 22px;
     padding: 2px;
     border: 1px solid #9ca3af;
     border-radius: 4px;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     background: white;
+}
+
+.table-box-2 table input {
+    font-size: 11px;
+    height: 24px;
+}
+
+.table-box-2 table input.name-input {
+    text-align: left;
+    padding-left: 6px;
+}
+
+.table-box-2 table input.readonly-col {
+    background: #f9fafb;
+    border: none;
+}
+
+.table-box-2 th {
+    font-size: 11px;
+    cursor: pointer;
+    user-select: none;
 }
 
 .direct-amount-input {
@@ -146,37 +167,15 @@ table input:focus {
     body {
         padding: 15px 5px;
     }
-
-    th,
-    td {
+    th, td {
         height: 24px;
         padding: 2px;
     }
-
     th {
-        font-size: 11px;
-    }
-
-    td {
-        font-size: 12px;
-    }
-
-    table input {
-        width: 70px;
-        height: 20px;
-        font-size: 12px;
-    }
-
-    .sync-cell label {
         font-size: 10px;
     }
-
-    .clear-btn {
+    td {
         font-size: 11px;
-    }
-
-    .miki {
-        padding-left: 8px;
     }
 }
 </style>
@@ -184,8 +183,8 @@ table input:focus {
 
 <body>
 
+<!-- FIRST TABLE -->
 <div class="table-box">
-
 <table>
     <thead>
         <tr>
@@ -196,121 +195,57 @@ table input:focus {
         </tr>
     </thead>
     <tbody>
-
-    <!-- ROW 1 -->
     <tr>
         <td class="miki">REG</td>
-        <td>
-            <input type="number" id="qtyReg"
-                   min="0" step="any"
-                   oninput="syncFromTable('Reg')">
-        </td>
-        <td>
-            <input type="number" id="priceReg"
-                   min="0" step="any"
-                   value="45"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="qtyReg" min="0" step="any" oninput="syncFromTable('Reg')"></td>
+        <td><input type="number" id="priceReg" min="0" step="any" value="45" oninput="calculateMain()"></td>
         <td class="amount" id="amountReg">0</td>
     </tr>
-
-    <!-- ROW 2 -->
     <tr>
         <td class="miki">FRESH</td>
-        <td>
-            <input type="number" id="qtyFresh"
-                   min="0" step="any"
-                   oninput="syncFromTable('Fresh')">
-        </td>
-        <td>
-            <input type="number" id="priceFresh"
-                   min="0" step="any"
-                   value="45"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="qtyFresh" min="0" step="any" oninput="syncFromTable('Fresh')"></td>
+        <td><input type="number" id="priceFresh" min="0" step="any" value="45" oninput="calculateMain()"></td>
         <td class="amount" id="amountFresh">0</td>
     </tr>
-
-    <!-- ROW 3 -->
     <tr>
         <td class="miki">CAB</td>
-        <td>
-            <input type="number" id="qtyCab"
-                   min="0" step="any"
-                   oninput="syncFromTable('Cab')">
-        </td>
-        <td>
-            <input type="number" id="priceCab"
-                   min="0" step="any"
-                   value="40"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="qtyCab" min="0" step="any" oninput="syncFromTable('Cab')"></td>
+        <td><input type="number" id="priceCab" min="0" step="any" value="40" oninput="calculateMain()"></td>
         <td class="amount" id="amountCab">0</td>
     </tr>
-
-    <!-- ROW 4 -->
     <tr>
         <td class="miki">BO</td>
-        <td>
-            <input type="number" id="qtyBo"
-                   min="0" step="any"
-                   oninput="syncFromTable('Bo')">
-        </td>
-        <td>
-            <input type="number" id="priceBo"
-                   min="0" step="any"
-                   value="45"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="qtyBo" min="0" step="any" oninput="syncFromTable('Bo')"></td>
+        <td><input type="number" id="priceBo" min="0" step="any" value="45" oninput="calculateMain()"></td>
         <td class="amount" id="amountBo">0</td>
     </tr>
-
-    <!-- ROW 5: TOTAL -->  
     <tr>
         <td class="miki">TOTAL</td>
         <td></td>
         <td></td>
         <td class="amount" id="totalAmount">0</td>
     </tr>
-
-    <!-- ROW 6: BAL (Nakalagay ang BAL sa 3rd column, input sa 4th column) -->
     <tr>
         <td></td>
         <td></td>
         <td class="label-cell">BAL</td>
-        <td>
-            <input type="number" id="inputBal"
-                   min="0" step="any"
-                   class="direct-amount-input"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="inputBal" min="0" step="any" class="direct-amount-input" oninput="calculateMain()"></td>
     </tr>
-
-    <!-- ROW 7: PAY (Nakalagay ang PAY sa 3rd column, input sa 4th column) -->
     <tr>
         <td></td>
         <td></td>
         <td class="label-cell">PAY</td>
-        <td>
-            <input type="number" id="inputPay"
-                   min="0" step="any"
-                   class="direct-amount-input"
-                   oninput="calculate()">
-        </td>
+        <td><input type="number" id="inputPay" min="0" step="any" class="direct-amount-input" oninput="calculateMain()"></td>
     </tr>
-
-    <!-- ROW 8: NET TOTAL -->  
     <tr>
         <td class="miki">NET TOTAL</td>
         <td></td>
         <td></td>
         <td class="amount" id="netTotalAmount">0</td>
     </tr>
-
     </tbody>
 </table>
 
-    <!-- 5-COLUMN SYNC PANEL AT THE BOTTOM -->
     <div class="sync-panel">
         <div class="sync-cell">
             <label>Dry</label>
@@ -329,20 +264,97 @@ table input:focus {
             <input type="number" id="syncBo" min="0" step="any" oninput="syncFromPanel('Bo')">
         </div>
         <div class="sync-cell">
-            <button class="clear-btn" onclick="clearAllQty()">CLEAR</button>
+            <button class="clear-btn" onclick="clearMainInputs()">CLEAR</button>
         </div>
     </div>
+</div>
 
+<!-- SECOND TABLE (8 COLUMNS, 18 ROWS) -->
+<div class="table-box table-box-2">
+<table>
+    <colgroup>
+        <col style="width: 20%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 10%;">
+        <col style="width: 20%;">
+    </colgroup>
+    <thead>
+        <tr>
+            <th id="lockHeader" onclick="handleKeyClick()" title="Tap 5 times to Lock/Unlock">🔑</th>
+            <th>Dry</th>
+            <th>Fresh</th>
+            <th>Cab</th>
+            <th>BO</th>
+            <th>Bal</th>
+            <th>Pay</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <script>
+            for (let i = 1; i <= 16; i++) {
+                document.write(`
+                    <tr>
+                        <td><input type="text" class="name-input" id="ledgerName_${i}" oninput="saveLedger()" onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="text" class="readonly-col" id="ledgerDry_${i}" readonly onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="text" class="readonly-col" id="ledgerFresh_${i}" readonly onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="text" class="readonly-col" id="ledgerCab_${i}" readonly onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="text" class="readonly-col" id="ledgerBo_${i}" readonly onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="text" class="readonly-col" id="ledgerBal_${i}" readonly onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="text" class="readonly-col" id="ledgerPay_${i}" readonly onfocus="loadRowToMain(${i})"></td>
+                        <td><input type="text" class="readonly-col amount" id="ledgerAmount_${i}" readonly></td>
+                    </tr>
+                `);
+            }
+        </script>
+        <!-- Row 18: Net Total Row -->
+        <tr>
+            <td class="miki">NET TOTAL</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="amount" id="ledgerNetTotal">0</td>
+        </tr>
+    </tbody>
+</table>
 </div>
 
 <script>
+let activeRow = 1;
+let tapCount = 0;
+let tapTimer = null;
+let isLocked = false;
 
-function getNumber(id) {
-    const value = parseFloat(
-        document.getElementById(id).value
-    );
+function handleKeyClick() {
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => {
+        tapCount = 0;
+    }, 1000);
 
-    return isNaN(value) ? 0 : value;
+    if (tapCount >= 5) {
+        tapCount = 0;
+        isLocked = !isLocked;
+        toggleLockState(isLocked);
+    }
+}
+
+function toggleLockState(locked) {
+    const header = document.getElementById("lockHeader");
+    header.textContent = locked ? "🔒" : "🔑";
+
+    const nameInputs = document.querySelectorAll(".name-input");
+    nameInputs.forEach(field => {
+        field.readOnly = locked;
+        field.style.backgroundColor = locked ? "#e5e7eb" : "white";
+    });
+}
+
+function getVal(id) {
+    const val = parseFloat(document.getElementById(id).value);
+    return isNaN(val) ? 0 : val;
 }
 
 function formatMoney(value) {
@@ -356,7 +368,7 @@ function syncFromPanel(type) {
     const val = document.getElementById("sync" + type).value;
     const targetId = type === "Dry" ? "qtyReg" : "qty" + type;
     document.getElementById(targetId).value = val;
-    calculate();
+    calculateMain();
 }
 
 function syncFromTable(type) {
@@ -366,49 +378,45 @@ function syncFromTable(type) {
     if (syncInput) {
         syncInput.value = val;
     }
-    calculate();
+    calculateMain();
 }
 
-function clearAllQty() {
-    const qtyIds = ["qtyReg", "qtyFresh", "qtyCab", "qtyBo", "syncDry", "syncFresh", "syncCab", "syncBo", "inputBal", "inputPay"];
-    qtyIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-    });
-    calculate();
+function clearMainInputs() {
+    document.getElementById("qtyReg").value = "";
+    document.getElementById("syncDry").value = "";
+    document.getElementById("qtyFresh").value = "";
+    document.getElementById("syncFresh").value = "";
+    document.getElementById("qtyCab").value = "";
+    document.getElementById("syncCab").value = "";
+    document.getElementById("qtyBo").value = "";
+    document.getElementById("syncBo").value = "";
+    document.getElementById("inputBal").value = "";
+    document.getElementById("inputPay").value = "";
+    calculateMain();
 }
 
-function calculate() {
-
-    const regQty = getNumber("qtyReg");
-    const regPrice = getNumber("priceReg");
+function calculateMain() {
+    const regQty = getVal("qtyReg");
+    const regPrice = getVal("priceReg");
     const regAmount = regQty * regPrice;
 
-    const freshQty = getNumber("qtyFresh");
-    const freshPrice = getNumber("priceFresh");
+    const freshQty = getVal("qtyFresh");
+    const freshPrice = getVal("priceFresh");
     const freshAmount = freshQty * freshPrice;
 
-    const cabQty = getNumber("qtyCab");
-    const cabPrice = getNumber("priceCab");
+    const cabQty = getVal("qtyCab");
+    const cabPrice = getVal("priceCab");
     const cabAmount = cabQty * cabPrice;
 
-    const boQty = getNumber("qtyBo");
-    const boPrice = getNumber("priceBo");
+    const boQty = getVal("qtyBo");
+    const boPrice = getVal("priceBo");
     const boAmount = (boQty / 2) * boPrice;
 
-    const balAmount = getNumber("inputBal");
-    const payAmount = getNumber("inputPay");
+    const balAmount = getVal("inputBal");
+    const payAmount = getVal("inputPay");
 
-    const total =
-        regAmount +
-        freshAmount +
-        cabAmount -
-        boAmount;
-
-    const netTotal =
-        total +
-        balAmount -
-        payAmount;
+    const total = regAmount + freshAmount + cabAmount - boAmount;
+    const netTotal = total + balAmount - payAmount;
 
     document.getElementById("amountReg").textContent = formatMoney(regAmount);
     document.getElementById("amountFresh").textContent = formatMoney(freshAmount);
@@ -417,68 +425,83 @@ function calculate() {
     document.getElementById("totalAmount").textContent = formatMoney(total);
     document.getElementById("netTotalAmount").textContent = formatMoney(netTotal);
 
-    saveData();
+    document.getElementById(`ledgerDry_${activeRow}`).value = document.getElementById("qtyReg").value;
+    document.getElementById(`ledgerFresh_${activeRow}`).value = document.getElementById("qtyFresh").value;
+    document.getElementById(`ledgerCab_${activeRow}`).value = document.getElementById("qtyCab").value;
+    document.getElementById(`ledgerBo_${activeRow}`).value = document.getElementById("qtyBo").value;
+    document.getElementById(`ledgerBal_${activeRow}`).value = document.getElementById("inputBal").value;
+    document.getElementById(`ledgerPay_${activeRow}`).value = document.getElementById("inputPay").value;
+    document.getElementById(`ledgerAmount_${activeRow}`).value = formatMoney(netTotal);
+
+    calculateLedgerTotals();
+    saveLedger();
 }
 
-function saveData() {
-    const data = {
-        qtyReg: document.getElementById("qtyReg").value,
-        priceReg: document.getElementById("priceReg").value,
+function loadRowToMain(row) {
+    activeRow = row;
+    document.getElementById("qtyReg").value = document.getElementById(`ledgerDry_${row}`).value;
+    document.getElementById("syncDry").value = document.getElementById(`ledgerDry_${row}`).value;
 
-        qtyFresh: document.getElementById("qtyFresh").value,
-        priceFresh: document.getElementById("priceFresh").value,
+    document.getElementById("qtyFresh").value = document.getElementById(`ledgerFresh_${row}`).value;
+    document.getElementById("syncFresh").value = document.getElementById(`ledgerFresh_${row}`).value;
 
-        qtyCab: document.getElementById("qtyCab").value,
-        priceCab: document.getElementById("priceCab").value,
+    document.getElementById("qtyCab").value = document.getElementById(`ledgerCab_${row}`).value;
+    document.getElementById("syncCab").value = document.getElementById(`ledgerCab_${row}`).value;
 
-        qtyBo: document.getElementById("qtyBo").value,
-        priceBo: document.getElementById("priceBo").value,
+    document.getElementById("qtyBo").value = document.getElementById(`ledgerBo_${row}`).value;
+    document.getElementById("syncBo").value = document.getElementById(`ledgerBo_${row}`).value;
 
-        inputBal: document.getElementById("inputBal").value,
-        inputPay: document.getElementById("inputPay").value
-    };
+    document.getElementById("inputBal").value = document.getElementById(`ledgerBal_${row}`).value;
+    document.getElementById("inputPay").value = document.getElementById(`ledgerPay_${row}`).value;
 
-    localStorage.setItem(
-        "miki_table_data",
-        JSON.stringify(data)
-    );
+    calculateMain();
 }
 
-function loadData() {
-    const saved = localStorage.getItem("miki_table_data");
-
-    if (!saved) {
-        calculate();
-        return;
+function calculateLedgerTotals() {
+    let grandTotal = 0;
+    for (let i = 1; i <= 16; i++) {
+        const amtStr = document.getElementById(`ledgerAmount_${i}`).value.replace(/,/g, '');
+        grandTotal += parseFloat(amtStr) || 0;
     }
-
-    const data = JSON.parse(saved);
-
-    document.getElementById("qtyReg").value = data.qtyReg || "";
-    document.getElementById("syncDry").value = data.qtyReg || "";
-    document.getElementById("priceReg").value = data.priceReg || "45";
-
-    document.getElementById("qtyFresh").value = data.qtyFresh || "";
-    document.getElementById("syncFresh").value = data.qtyFresh || "";
-    document.getElementById("priceFresh").value = data.priceFresh || "45";
-
-    document.getElementById("qtyCab").value = data.qtyCab || "";
-    document.getElementById("syncCab").value = data.qtyCab || "";
-    document.getElementById("priceCab").value = data.priceCab || "40";
-
-    document.getElementById("qtyBo").value = data.qtyBo || "";
-    document.getElementById("syncBo").value = data.qtyBo || "";
-    document.getElementById("priceBo").value = data.priceBo || "45";
-
-    document.getElementById("inputBal").value = data.inputBal || "";
-    document.getElementById("inputPay").value = data.inputPay || "";
-
-    calculate();
+    document.getElementById("ledgerNetTotal").textContent = formatMoney(grandTotal);
 }
 
-window.onload = loadData;
+function saveLedger() {
+    const ledgerData = {};
+    for (let i = 1; i <= 16; i++) {
+        ledgerData[`name_${i}`] = document.getElementById(`ledgerName_${i}`).value;
+        ledgerData[`dry_${i}`] = document.getElementById(`ledgerDry_${i}`).value;
+        ledgerData[`fresh_${i}`] = document.getElementById(`ledgerFresh_${i}`).value;
+        ledgerData[`cab_${i}`] = document.getElementById(`ledgerCab_${i}`).value;
+        ledgerData[`bo_${i}`] = document.getElementById(`ledgerBo_${i}`).value;
+        ledgerData[`bal_${i}`] = document.getElementById(`ledgerBal_${i}`).value;
+        ledgerData[`pay_${i}`] = document.getElementById(`ledgerPay_${i}`).value;
+        ledgerData[`amount_${i}`] = document.getElementById(`ledgerAmount_${i}`).value;
+    }
+    localStorage.setItem("miki_ledger_data", JSON.stringify(ledgerData));
+}
 
+function loadLedger() {
+    const saved = localStorage.getItem("miki_ledger_data");
+    if (!saved) return;
+    const ledgerData = JSON.parse(saved);
+
+    for (let i = 1; i <= 16; i++) {
+        if(ledgerData[`name_${i}`]) document.getElementById(`ledgerName_${i}`).value = ledgerData[`name_${i}`];
+        if(ledgerData[`dry_${i}`]) document.getElementById(`ledgerDry_${i}`).value = ledgerData[`dry_${i}`];
+        if(ledgerData[`fresh_${i}`]) document.getElementById(`ledgerFresh_${i}`).value = ledgerData[`fresh_${i}`];
+        if(ledgerData[`cab_${i}`]) document.getElementById(`ledgerCab_${i}`).value = ledgerData[`cab_${i}`];
+        if(ledgerData[`bo_${i}`]) document.getElementById(`ledgerBo_${i}`).value = ledgerData[`bo_${i}`];
+        if(ledgerData[`bal_${i}`]) document.getElementById(`ledgerBal_${i}`).value = ledgerData[`bal_${i}`];
+        if(ledgerData[`pay_${i}`]) document.getElementById(`ledgerPay_${i}`).value = ledgerData[`pay_${i}`];
+        if(ledgerData[`amount_${i}`]) document.getElementById(`ledgerAmount_${i}`).value = ledgerData[`amount_${i}`];
+    }
+    loadRowToMain(1);
+    calculateLedgerTotals();
+}
+
+window.onload = loadLedger;
 </script>
 
 </body>
-</html>
+        </html>
