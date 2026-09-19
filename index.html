@@ -520,13 +520,13 @@ function loadLedger() {
 
     for (let i = 1; i <= 16; i++) {
         if(ledgerData[`name_${i}`]) document.getElementById(`ledgerName_${i}`).value = ledgerData[`name_${i}`];
-        if(ledgerData[`dry_${i}`]) document.getElementById(`ledgerDry_${i}`].value = ledgerData[`dry_${i}`];
-        if(ledgerData[`fresh_${i}`]) document.getElementById(`ledgerFresh_${i}`].value = ledgerData[`fresh_${i}`];
-        if(ledgerData[`cab_${i}`]) document.getElementById(`ledgerCab_${i}`].value = ledgerData[`cab_${i}`];
-        if(ledgerData[`bo_${i}`]) document.getElementById(`ledgerBo_${i}`].value = ledgerData[`bo_${i}`];
-        if(ledgerData[`bal_${i}`]) document.getElementById(`ledgerBal_${i}`].value = ledgerData[`bal_${i}`];
-        if(ledgerData[`pay_${i}`]) document.getElementById(`ledgerPay_${i}`].value = ledgerData[`pay_${i}`];
-        if(ledgerData[`amount_${i}`]) document.getElementById(`ledgerAmount_${i}`].value = ledgerData[`amount_${i}`];
+        if(ledgerData[`dry_${i}`]) document.getElementById(`ledgerDry_${i}`).value = ledgerData[`dry_${i}`];
+        if(ledgerData[`fresh_${i}`]) document.getElementById(`ledgerFresh_${i}`).value = ledgerData[`fresh_${i}`];
+        if(ledgerData[`cab_${i}`]) document.getElementById(`ledgerCab_${i}`).value = ledgerData[`cab_${i}`];
+        if(ledgerData[`bo_${i}`]) document.getElementById(`ledgerBo_${i}`).value = ledgerData[`bo_${i}`];
+        if(ledgerData[`bal_${i}`]) document.getElementById(`ledgerBal_${i}`], document.getElementById(`ledgerBal_${i}`).value = ledgerData[`bal_${i}`];
+        if(ledgerData[`pay_${i}`]) document.getElementById(`ledgerPay_${i}`).value = ledgerData[`pay_${i}`];
+        if(ledgerData[`amount_${i}`]) document.getElementById(`ledgerAmount_${i}`).value = ledgerData[`amount_${i}`];
     }
     loadRowToMain(1);
     calculateLedgerTotals();
