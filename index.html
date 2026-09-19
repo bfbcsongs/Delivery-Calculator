@@ -111,6 +111,12 @@ table input:focus {
     font-weight: bold;
 }
 
+/* Pula para sa Net Total values */
+.net-total-red {
+    font-weight: bold;
+    color: #dc2626;
+}
+
 .sync-panel {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -238,10 +244,10 @@ table input:focus {
         <td><input type="number" id="inputPay" min="0" step="any" class="direct-amount-input" oninput="calculateMain()"></td>
     </tr>
     <tr>
-        <td class="miki">NET TOTAL</td>
+        <td class="miki" style="color: #dc2626;">NET TOTAL</td>
         <td></td>
         <td></td>
-        <td class="amount" id="netTotalAmount">0</td>
+        <td class="net-total-red" id="netTotalAmount">0</td>
     </tr>
     </tbody>
 </table>
@@ -313,9 +319,9 @@ table input:focus {
         </script>
         <!-- Row 18: Net Total Row -->
         <tr>
-            <td class="miki">NET TOTAL</td>
+            <td class="miki" style="color: #dc2626;">NET TOTAL</td>
             <td></td><td></td><td></td><td></td><td></td><td></td>
-            <td class="amount" id="ledgerNetTotal">0</td>
+            <td class="net-total-red" id="ledgerNetTotal">0</td>
         </tr>
     </tbody>
 </table>
@@ -534,4 +540,4 @@ window.onload = loadLedger;
 </script>
 
 </body>
-</html>
+    </html>
