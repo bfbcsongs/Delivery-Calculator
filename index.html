@@ -274,8 +274,11 @@ table input:focus {
             <input type="number" id="priceBal"
                    min="0" step="any"
                    oninput="number">
+       
         </td>
-        <td class="amount" id="amountBal">number</td>
+        <input type="number" id="balPay"
+                   min="0" step="any"
+                   oninput="number">  </td>
     </tr>
 
     <!-- ROW 7: PAY -->
@@ -285,13 +288,16 @@ table input:focus {
             <input type="number" id="qtyPay"
                    min="0" step="any"
                    oninput="calculate()">
-        </td>
+        
         <td>
             <input type="number" id="pricePay"
                    min="0" step="any"
                    oninput="number">
-        </td>
-        <td class="amount" id="amountPay">number</td>
+       
+        </td>    
+      <input type="number" id="amountPay"
+                   min="0" step="any"
+                   oninput="number">  </td>
     </tr>
 
     <!-- ROW 8: NET TOTAL -->  
