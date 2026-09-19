@@ -71,6 +71,13 @@ table input {
     background: white;
 }
 
+/* Espesyal na laki para sa direct amount input ng Bal at Pay */
+.direct-amount-input {
+    width: 100% !important;
+    height: 24px !important;
+    font-weight: bold;
+}
+
 table input:focus {
     outline: 2px solid #94a3b8;
 }
@@ -262,42 +269,30 @@ table input:focus {
         <td class="amount" id="totalAmount">0.00</td>
     </tr>
 
-    <!-- ROW 6: BAL -->
+    <!-- ROW 6: BAL (Direct Amount Input) -->
     <tr>
         <td class="miki">BAL</td>
+        <td></td>
+        <td></td>
         <td>
-            <input type="number" id="qtyBal"
+            <input type="number" id="inputBal"
                    min="0" step="any"
+                   class="direct-amount-input"
                    oninput="calculate()">
         </td>
-        <td>
-            <input type="number" id="priceBal"
-                   min="0" step="any"
-                   oninput="number">
-       
-        </td>
-        <input type="number" id="balPay"
-                   min="0" step="any"
-                   oninput="number">  </td>
     </tr>
 
-    <!-- ROW 7: PAY -->
+    <!-- ROW 7: PAY (Direct Amount Input) -->
     <tr>
         <td class="miki">PAY</td>
+        <td></td>
+        <td></td>
         <td>
-            <input type="number" id="qtyPay"
+            <input type="number" id="inputPay"
                    min="0" step="any"
+                   class="direct-amount-input"
                    oninput="calculate()">
-        
-        <td>
-            <input type="number" id="pricePay"
-                   min="0" step="any"
-                   oninput="number">
-       
-        </td>    
-      <input type="number" id="amountPay"
-                   min="0" step="any"
-                   oninput="number">  </td>
+        </td>
     </tr>
 
     <!-- ROW 8: NET TOTAL -->  
@@ -371,7 +366,7 @@ function syncFromTable(type) {
 }
 
 function clearAllQty() {
-    const qtyIds = ["qtyReg", "qtyFresh", "qtyCab", "qtyBo", "qtyBal", "qtyPay", "syncDry", "syncFresh", "syncCab", "syncBo"];
+    const qtyIds = ["qtyReg", "qtyFresh", "qtyCab", "qtyBo", "syncDry", "syncFresh", "syncCab", "syncBo", "inputBal", "inputPay"];
     qtyIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = "";
@@ -397,13 +392,9 @@ function calculate() {
     const boPrice = getNumber("priceBo");
     const boAmount = (boQty / 2) * boPrice;
 
-    const balQty = getNumber("qtyBal");
-    const balPrice = getNumber("priceBal");
-    const balAmount = balQty * balPrice;
-
-    const payQty = getNumber("qtyPay");
-    const payPrice = getNumber("pricePay");
-    const payAmount = payQty * payPrice;
+    // Direktang kinukuha ang amount ng Bal at Pay
+    const balAmount = getNumber("inputBal");
+    const payAmount = getNumber("inputPay");
 
     const total =
         regAmount +
@@ -411,6 +402,7 @@ function calculate() {
         cabAmount -
         boAmount;
 
+    // NET TOTAL = TOTAL + BAL - PAY
     const netTotal =
         total +
         balAmount -
@@ -421,8 +413,6 @@ function calculate() {
     document.getElementById("amountCab").textContent = formatMoney(cabAmount);
     document.getElementById("amountBo").textContent = formatMoney(boAmount);
     document.getElementById("totalAmount").textContent = formatMoney(total);
-    document.getElementById("amountBal").textContent = formatMoney(balAmount);
-    document.getElementById("amountPay").textContent = formatMoney(payAmount);
     document.getElementById("netTotalAmount").textContent = formatMoney(netTotal);
 
     saveData();
@@ -442,11 +432,8 @@ function saveData() {
         qtyBo: document.getElementById("qtyBo").value,
         priceBo: document.getElementById("priceBo").value,
 
-        qtyBal: document.getElementById("qtyBal").value,
-        priceBal: document.getElementById("priceBal").value,
-
-        qtyPay: document.getElementById("qtyPay").value,
-        pricePay: document.getElementById("pricePay").value
+        inputBal: document.getElementById("inputBal").value,
+        inputPay: document.getElementById("inputPay").value
     };
 
     localStorage.setItem(
@@ -481,18 +468,15 @@ function loadData() {
     document.getElementById("syncBo").value = data.qtyBo || "";
     document.getElementById("priceBo").value = data.priceBo || "45";
 
-    document.getElementById("qtyBal").value = data.qtyBal || "";
-    // Dito nilagyan natin ng || "" para blangko kung walang naka-save
-    document.getElementById("priceBal").value = data.priceBal || "";
-
-    document.getElementById("qtyPay").value = data.qtyPay || "";
-    // Dito rin nilagyan ng || "" para blangko din
-    document.getElementById("pricePay").value = data.pricePay || "";
+    document.getElementById("inputBal").value = data.inputBal || "";
+    document.getElementById("inputPay").value = data.inputPay || "";
 
     calculate();
 }
 
+window.onload = loadData;
+
 </script>
 
 </body>
-    </html>
+</html>
