@@ -271,14 +271,11 @@ table input:focus {
 
     <!-- ROW 6: BAL (Direct Amount Input) -->
     <tr>
-        <td class="miki">BAL</td>
-        <td></td>
-        <td></td>
+        <td class="miki">Bal</td>
         <td>
-            <input type="number" id="inputBal"
+            <input type="number" id="amountbal"
                    min="0" step="any"
-                   class="direct-amount-input"
-                   oninput="calculate()">
+                   oninput="syncFromTable('bal')">
         </td>
     </tr>
 
@@ -288,10 +285,11 @@ table input:focus {
         <td></td>
         <td></td>
         <td>
-            <input type="number" id="inputPay"
+            <td class="miki">Pay</td>
+        <td>
+            <input type="number" id="amountpay"
                    min="0" step="any"
-                   class="direct-amount-input"
-                   oninput="calculate()">
+                   oninput="syncFromTable('pay')">
         </td>
     </tr>
 
