@@ -324,12 +324,10 @@ table input:focus {
 <script>
 let activeRow = 1;
 
-// Table 2 (Name Column) Lock/Unlock vars
 let tapCount = 0;
 let tapTimer = null;
 let isLocked = false;
 
-// Table 1 (Price Columns) Lock/Unlock vars
 let priceTapCount = 0;
 let priceTapTimer = null;
 let isPriceLocked = false;
@@ -524,7 +522,7 @@ function loadLedger() {
         if(ledgerData[`fresh_${i}`]) document.getElementById(`ledgerFresh_${i}`).value = ledgerData[`fresh_${i}`];
         if(ledgerData[`cab_${i}`]) document.getElementById(`ledgerCab_${i}`).value = ledgerData[`cab_${i}`];
         if(ledgerData[`bo_${i}`]) document.getElementById(`ledgerBo_${i}`).value = ledgerData[`bo_${i}`];
-        if(ledgerData[`bal_${i}`]) document.getElementById(`ledgerBal_${i}`], document.getElementById(`ledgerBal_${i}`).value = ledgerData[`bal_${i}`];
+        if(ledgerData[`bal_${i}`]) document.getElementById(`ledgerBal_${i}`).value = ledgerData[`bal_${i}`];
         if(ledgerData[`pay_${i}`]) document.getElementById(`ledgerPay_${i}`).value = ledgerData[`pay_${i}`];
         if(ledgerData[`amount_${i}`]) document.getElementById(`ledgerAmount_${i}`).value = ledgerData[`amount_${i}`];
     }
