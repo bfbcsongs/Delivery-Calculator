@@ -179,7 +179,7 @@ table input:focus {
 
 .install-btn {
     background: #2563eb;
-    display: none; /* Magpapakita lang kapag pwede nang i-install */
+    display: none;
 }
 .install-btn:hover { background: #1d4ed8; }
 
@@ -290,7 +290,7 @@ table input:focus {
     </div>
 </div>
 
-<!-- SECOND TABLE (8 COLUMNS, 18 ROWS) -->
+<!-- SECOND TABLE -->
 <div class="table-box table-box-2">
 <table>
     <colgroup>
@@ -311,7 +311,7 @@ table input:focus {
             <th>Cab</th>
             <th>BO</th>
             <th>Bal</th>
-            <th>Pay</th>
+            <th>BAL</th> <!-- Renamed to BAL in all uppercase -->
             <th>Amount</th>
         </tr>
     </thead>
@@ -332,7 +332,6 @@ table input:focus {
                 `);
             }
         </script>
-        <!-- Row 18: Net Total Row -->
         <tr>
             <td class="miki" style="color: #dc2626;">NET TOTAL</td>
             <td></td><td></td><td></td><td></td><td></td><td></td>
@@ -367,17 +366,16 @@ function installApp() {
     }
 }
 
-// Service Worker Registration for Offline Use
+// Service Worker Registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
+        navigator.serviceWorker.register('./sw.js?v=1', { scope: './' })
             .then(reg => console.log('Service Worker Registered!', reg))
             .catch(err => console.log('Service Worker Registration Failed:', err));
     });
 }
 
 let activeRow = 1;
-
 let tapCount = 0;
 let tapTimer = null;
 let isLocked = false;
@@ -480,6 +478,7 @@ function clearMainInputs() {
 }
 
 function calculateMain() {
+    // 1. Standard Item Calculations (Formulas Untouched)
     const regQty = getVal("qtyReg");
     const regPrice = getVal("priceReg");
     const regAmount = regQty * regPrice;
@@ -499,9 +498,11 @@ function calculateMain() {
     const balAmount = getVal("inputBal");
     const payAmount = getVal("inputPay");
 
+    // 2. Net Total Formula Calculation
     const total = regAmount + freshAmount + cabAmount - boAmount;
     const netTotal = total + balAmount - payAmount;
 
+    // 3. Update Displays in Upper Table
     document.getElementById("amountReg").textContent = formatMoney(regAmount);
     document.getElementById("amountFresh").textContent = formatMoney(freshAmount);
     document.getElementById("amountCab").textContent = formatMoney(cabAmount);
@@ -509,13 +510,23 @@ function calculateMain() {
     document.getElementById("totalAmount").textContent = formatMoney(total);
     document.getElementById("netTotalAmount").textContent = formatMoney(netTotal);
 
+    // 4. Update Lower Table Cells
     document.getElementById(`ledgerDry_${activeRow}`).value = document.getElementById("qtyReg").value;
     document.getElementById(`ledgerFresh_${activeRow}`).value = document.getElementById("qtyFresh").value;
     document.getElementById(`ledgerCab_${activeRow}`).value = document.getElementById("qtyCab").value;
     document.getElementById(`ledgerBo_${activeRow}`).value = document.getElementById("qtyBo").value;
     document.getElementById(`ledgerBal_${activeRow}`).value = document.getElementById("inputBal").value;
-    document.getElementById(`ledgerPay_${activeRow}`).value = document.getElementById("inputPay").value;
-    document.getElementById(`ledgerAmount_${activeRow}`).value = formatMoney(netTotal);
+
+    // Calculated Net Total goes to upper-case BAL column in ledger
+    document.getElementById(`ledgerPay_${activeRow}`).value = formatMoney(netTotal);
+
+    // 5. Safe Display Check for Amount:
+    // If user enters a PAY value, display that PAY in Amount for collection totals.
+    // If PAY is empty, display the calculated Net Total.
+    const hasPayEntry = document.getElementById("inputPay").value.trim() !== "";
+    const finalLedgerAmount = hasPayEntry ? payAmount : netTotal;
+
+    document.getElementById(`ledgerAmount_${activeRow}`).value = formatMoney(finalLedgerAmount);
 
     calculateLedgerTotals();
     saveLedger();
@@ -536,6 +547,8 @@ function loadRowToMain(row) {
     document.getElementById("syncBo").value = document.getElementById(`ledgerBo_${row}`).value;
 
     document.getElementById("inputBal").value = document.getElementById(`ledgerBal_${row}`).value;
+    
+    // Loads payment value into upper PAY field if custom entry exists
     document.getElementById("inputPay").value = document.getElementById(`ledgerPay_${row}`).value;
 
     calculateMain();
@@ -574,7 +587,7 @@ function loadLedger() {
         if(ledgerData[`name_${i}`]) document.getElementById(`ledgerName_${i}`).value = ledgerData[`name_${i}`];
         if(ledgerData[`dry_${i}`]) document.getElementById(`ledgerDry_${i}`).value = ledgerData[`dry_${i}`];
         if(ledgerData[`fresh_${i}`]) document.getElementById(`ledgerFresh_${i}`).value = ledgerData[`fresh_${i}`];
-        if(ledgerData[`cab_${i}`]) document.getElementById(`ledgerCab_${i}`).value = ledgerData[`ledgerCab_${i}`];
+        if(ledgerData[`cab_${i}`]) document.getElementById(`ledgerCab_${i}`).value = ledgerData[`cab_${i}`];
         if(ledgerData[`bo_${i}`]) document.getElementById(`ledgerBo_${i}`).value = ledgerData[`bo_${i}`];
         if(ledgerData[`bal_${i}`]) document.getElementById(`ledgerBal_${i}`).value = ledgerData[`bal_${i}`];
         if(ledgerData[`pay_${i}`]) document.getElementById(`ledgerPay_${i}`).value = ledgerData[`pay_${i}`];
@@ -586,18 +599,6 @@ function loadLedger() {
 
 window.onload = loadLedger;
 </script>
-<script>
-// Service Worker Registration for Offline Use
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=1', { scope: './' })
-            .then(reg => console.log('Service Worker Registered!', reg))
-            .catch(err => console.log('Service Worker Registration Failed:', err));
-    });
-}
-</script>
 
 </body>
-</html>
-</body>
-</html>
+    </html>
