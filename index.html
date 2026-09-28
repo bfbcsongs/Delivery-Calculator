@@ -101,6 +101,21 @@ table input {
     background: white;
 }
 
+/* TABLE 1 NET TOTAL LARGE FONT SPECIFIC STYLE */
+.miki-net-total-large {
+    font-size: 25px !important;
+    font-weight: bold;
+    color: #dc2626;
+    text-align: left;
+    padding-left: 12px;
+}
+
+.net-total-large {
+    font-size: 25px !important;
+    font-weight: bold;
+    color: #dc2626;
+}
+
 /* TABLE 2 SPECIFIC STYLES */
 .table-box-2 td {
     padding: 1px 2px;
@@ -254,7 +269,7 @@ table input:focus {
             <tr>
                 <th>Item</th>
                 <th>Qty</th>
-                <th id="priceLockHeader" class="lockable-header" onclick="handlePriceKeyClick()" title="Tap 5 times to Unlock/Lock Prices">Price 🔑</th>
+                <th id="priceLockHeader" class="lockable-header" onclick="handlePriceKeyClick()" title="Tap 5 times to Lock/Unlock Prices">Price 🔒</th>
                 <th>Amount</th>
             </tr>
         </thead>
@@ -262,25 +277,25 @@ table input:focus {
         <tr>
             <td class="miki">REG</td>
             <td><input type="number" id="qtyReg" min="0" step="any" oninput="syncFromTable('Reg')"></td>
-            <td><input type="number" id="priceReg" class="price-input" min="0" step="any" value="45" oninput="calculateMain()"></td>
+            <td><input type="number" id="priceReg" class="price-input" min="0" step="any" value="45" oninput="calculateMain()" readonly style="background-color: #e5e7eb;"></td>
             <td class="amount" id="amountReg">0</td>
         </tr>
         <tr>
             <td class="miki">FRESH</td>
             <td><input type="number" id="qtyFresh" min="0" step="any" oninput="syncFromTable('Fresh')"></td>
-            <td><input type="number" id="priceFresh" class="price-input" min="0" step="any" value="45" oninput="calculateMain()"></td>
+            <td><input type="number" id="priceFresh" class="price-input" min="0" step="any" value="45" oninput="calculateMain()" readonly style="background-color: #e5e7eb;"></td>
             <td class="amount" id="amountFresh">0</td>
         </tr>
         <tr>
             <td class="miki">CAB</td>
             <td><input type="number" id="qtyCab" min="0" step="any" oninput="syncFromTable('Cab')"></td>
-            <td><input type="number" id="priceCab" class="price-input" min="0" step="any" value="40" oninput="calculateMain()"></td>
+            <td><input type="number" id="priceCab" class="price-input" min="0" step="any" value="40" oninput="calculateMain()" readonly style="background-color: #e5e7eb;"></td>
             <td class="amount" id="amountCab">0</td>
         </tr>
         <tr>
             <td class="miki">BO</td>
             <td><input type="number" id="qtyBo" min="0" step="any" oninput="syncFromTable('Bo')"></td>
-            <td><input type="number" id="priceBo" class="price-input" min="0" step="any" value="45" oninput="calculateMain()"></td>
+            <td><input type="number" id="priceBo" class="price-input" min="0" step="any" value="45" oninput="calculateMain()" readonly style="background-color: #e5e7eb;"></td>
             <td class="amount" id="amountBo">0</td>
         </tr>
         <tr>
@@ -301,10 +316,10 @@ table input:focus {
             <td><input type="number" id="inputPay" min="0" step="any" class="direct-amount-input" oninput="calculateMain()"></td>
         </tr>
         <tr>
-            <td class="miki" style="color: #dc2626;">NET TOTAL</td>
+            <td class="miki-net-total-large">NET TOTAL</td>
             <td></td>
             <td></td>
-            <td class="net-total-red" id="netTotalAmount">0</td>
+            <td class="net-total-large" id="netTotalAmount">0</td>
         </tr>
         </tbody>
     </table>
@@ -349,7 +364,7 @@ table input:focus {
         </colgroup>
         <thead>
             <tr>
-                <th id="lockHeader" class="lockable-header" onclick="handleKeyClick()" title="Tap 5 times to Unlock/Kock">🔑</th>
+                <th id="lockHeader" class="lockable-header" onclick="handleKeyClick()" title="Tap 5 times to Lock/Unlock">🔒</th>
                 <th>Dry</th>
                 <th>Fresh</th>
                 <th>Cab</th>
@@ -365,7 +380,7 @@ table input:focus {
                 for (let i = 1; i <= 16; i++) {
                     document.write(`
                         <tr>
-                            <td><input type="text" class="name-input" id="ledgerName_${i}" oninput="updateActiveCustomerName(${i}); saveLedger();" onfocus="loadRowToMain(${i})"></td>
+                            <td><input type="text" class="name-input" id="ledgerName_${i}" oninput="updateActiveCustomerName(${i}); saveLedger();" onfocus="loadRowToMain(${i})" readonly style="background-color: #e5e7eb;"></td>
                             <td><input type="text" class="readonly-col" id="ledgerDry_${i}" readonly onfocus="loadRowToMain(${i})"></td>
                             <td><input type="text" class="readonly-col" id="ledgerFresh_${i}" readonly onfocus="loadRowToMain(${i})"></td>
                             <td><input type="text" class="readonly-col" id="ledgerCab_${i}" readonly onfocus="loadRowToMain(${i})"></td>
@@ -446,11 +461,11 @@ let activeRow = 1;
 
 let tapCount = 0;
 let tapTimer = null;
-let isLocked = false;
+let isLocked = true; // Set to locked on default
 
 let priceTapCount = 0;
 let priceTapTimer = null;
-let isPriceLocked = false;
+let isPriceLocked = true; // Set to locked on default
 
 function handleKeyClick() {
     tapCount++;
