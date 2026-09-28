@@ -338,12 +338,12 @@ table input:focus {
     <table>
         <colgroup>
             <col style="width: 10%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
-            <col style="width: 7%;">
             <col style="width: 10%;">
             <col style="width: 10%;">
-            <col style="width: 15%;">
+            <col style="width: 10%;">
+            <col style="width: 10%;">
+            <col style="width: 10%;">
+            <col style="width: 10%;">
             <col style="width: 15%;">
             <col style="width: 15%;">
         </colgroup>
@@ -507,10 +507,11 @@ function getVal(id) {
     return isNaN(val) ? 0 : val;
 }
 
+// FORMAT MONEY: Formats numbers as whole integers without decimals
 function formatMoney(value) {
-    return value.toLocaleString("en-US", {
+    return Math.round(value).toLocaleString("en-US", {
         minimumFractionDigits: 0,
-        maximumFractionDigits: 2
+        maximumFractionDigits: 0
     });
 }
 
@@ -556,22 +557,22 @@ function clearMainInputs() {
 function calculateMain() {
     const regQty = getVal("qtyReg");
     const regPrice = getVal("priceReg");
-    const regAmount = regQty * regPrice;
+    const regAmount = Math.round(regQty * regPrice);
 
     const freshQty = getVal("qtyFresh");
     const freshPrice = getVal("priceFresh");
-    const freshAmount = freshQty * freshPrice;
+    const freshAmount = Math.round(freshQty * freshPrice);
 
     const cabQty = getVal("qtyCab");
     const cabPrice = getVal("priceCab");
-    const cabAmount = cabQty * cabPrice;
+    const cabAmount = Math.round(cabQty * cabPrice);
 
     const boQty = getVal("qtyBo");
     const boPrice = getVal("priceBo");
-    const boAmount = (boQty / 2) * boPrice;
+    const boAmount = Math.round((boQty / 2) * boPrice);
 
-    const balAmount = getVal("inputBal");
-    const payAmount = getVal("inputPay");
+    const balAmount = Math.round(getVal("inputBal"));
+    const payAmount = Math.round(getVal("inputPay"));
 
     const total = regAmount + freshAmount + cabAmount - boAmount;
     
@@ -660,7 +661,7 @@ function calculateLedgerTotals() {
     document.getElementById("totalDry").textContent = formatMoney(sumDry);
     document.getElementById("totalFresh").textContent = formatMoney(sumFresh);
     document.getElementById("totalCab").textContent = formatMoney(sumCab);
-    document.getElementById("totalBo").textContent = formatMoney(sumBo);
+    document.getElementById("totalBo").textContent = sumBo % 1 === 0 ? sumBo : sumBo.toFixed(1);
     document.getElementById("totalBal").textContent = formatMoney(sumBal);
     document.getElementById("totalBilling").textContent = formatMoney(sumBilling);
     document.getElementById("totalColln").textContent = formatMoney(sumColln);
